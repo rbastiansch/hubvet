@@ -21,6 +21,7 @@ module.exports = {
     ],
     'eol-last': 2,
     'no-multiple-empty-lines': 2,
-    'vue/valid-v-on': 0
+    'vue/valid-v-on': 0,
+    'vue/no-v-html': 0
   }
 }

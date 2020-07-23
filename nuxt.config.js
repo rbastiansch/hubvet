@@ -72,7 +72,7 @@ export default {
       dark: false,
       themes: {
         light: {
-          primary: '#8940FA',
+          primary: '#909CA7',
           accent: '#F2F2F2',
           secondary: '#f4f4f4',
           info: '#a3a3a3',

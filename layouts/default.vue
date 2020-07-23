@@ -57,11 +57,11 @@
         <v-icon>mdi-menu</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-content>
-      <v-container>
+    <v-main>
+      <v-container class="fullHeight">
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
     <v-navigation-drawer
       v-model="rightDrawer"
       :right="right"
@@ -95,14 +95,14 @@
           class="ml-1 mr-1"
         />
         <span>Softwate LTDA</span>
-        <v-button
+        <v-btn
           icon
           class="footer__faq"
         >
           <v-icon size="40px">
             mdi-help-circle-outline
           </v-icon>
-        </v-button>
+        </v-btn>
       </div>
     </v-footer>
   </v-app>

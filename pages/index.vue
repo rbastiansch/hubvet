@@ -3,6 +3,7 @@
     column
     justify-center
     align-center
+    class="fullHeight"
   >
     <v-row justify="center">
       <v-col cols="8">
