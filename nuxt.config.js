@@ -79,7 +79,9 @@ export default {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
-          red: '#ff7575'
+          red: '#ff7575',
+          gray: '#EBEFF2',
+          green: '#44BBA4'
         }
       }
     }

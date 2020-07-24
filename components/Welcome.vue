@@ -38,68 +38,50 @@
         />
       </v-col>
     </v-row>
-    <div class="welcome__steps">
-      <div v-if="isStepActive(stepsEnum.first)">
-        <v-img
-          :src="selectData.img"
-          alt="first step"
-          width="260px"
-          height="210px"
-          contain
-          class="mx-auto"
-        />
-        <p
-          class="welcome__steps__text"
-          v-html="selectData.text"
-        />
-        <v-select
-          v-model="selectValue"
-          :items="[{value: 'option1', text: 'Opção 1'}, {value: 'option2', text: 'Opção 2'}]"
-          label="O que você deseja fazer?"
-          class="my-12"
-        />
+    <div
+      v-else
+      class="welcome__steps"
+    >
+      <step-content
+        v-model="stepContentSelect"
+        :image="selectData.img"
+        :text="stepData.text"
+        :items="stepData.items"
+      />
+      <div class="text-center">
+        <v-btn
+          color="welcome__steps__button green fontRoboto"
+          @click="doSetup"
+        >
+          Realizar setup
+        </v-btn>
       </div>
+      <paginator
+        :active-step="step"
+        :items="stepsToPaginator"
+        @changeStep="changeStep"
+      />
     </div>
   </div>
 </template>
 
 <script>
-
-const stepDataInfos = {
-  default: {
-    option1: {
-      img: '/step1option1.svg',
-      text: '<b>Cuide</b> e <b>Aumente</b> a <b>receita</b> do seu <b>Laboratório</b>. Ofereça à seus clientes um ambiente <b>seguro</b> e <b>eficaz</b>.'
-    },
-    option2: {
-      img: '/step1option2.svg',
-      text: '<b>Cuide</b> e <b>Aumente</b> a <b>receita</b> do seu <b>Laboratório</b>. Ofereça à seus clientes um ambiente <b>seguro</b> e <b>eficaz</b>.'
-    }
-  },
-  first: {
-    option1: {
-      img: '/step1option1.svg',
-      text: '<b>Cuide</b> e <b>Aumente</b> a <b>receita</b> do seu <b>Laboratório</b>. Ofereça à seus clientes um ambiente <b>seguro</b> e <b>eficaz</b>.'
-    },
-    option2: {
-      img: '/step1option2.svg',
-      text: '<b>Cuide</b> e <b>Aumente</b> a <b>receita</b> do seu <b>Laboratório</b>. Ofereça à seus clientes um ambiente <b>seguro</b> e <b>eficaz</b>.'
-    }
-  }
-}
+import StepContent from '@/components/StepContent'
+import Paginator from '@/components/Paginator'
+import { STEPS, STEPS_DATA } from '@/enum/steps.enum'
 
 export default {
+  components: {
+    StepContent,
+    Paginator
+  },
   data () {
     return {
       user: 'leolands',
-      step: 1,
-      stepsEnum: {
-        start: 0,
-        first: 1,
-        second: 2,
-        third: 3
-      },
-      selectValue: null
+      step: 0,
+      stepsEnum: STEPS,
+      page: 1,
+      stepContentSelect: null
     }
   },
   computed: {
@@ -118,23 +100,49 @@ export default {
     stepData () {
       const { currentStepKey } = this
       if (!currentStepKey) {
-        return stepDataInfos.default
+        return STEPS_DATA.first
       }
 
-      return stepDataInfos[currentStepKey]
+      return STEPS_DATA[currentStepKey]
     },
     selectData () {
-      const { stepData, selectValue } = this
-      if (!selectValue) {
-        return stepData.option1
+      const { stepData, stepContentSelect } = this
+      if (!stepData) {
+        return {}
       }
 
-      return stepData[selectValue]
+      if (!stepContentSelect) {
+        const firstKey = Object.keys(stepData.images)[0]
+        return stepData.images[firstKey]
+      }
+
+      return stepData.images[stepContentSelect]
+    },
+    stepsToPaginator () {
+      const copySteps = { ...this.stepsEnum }
+      delete copySteps.start
+      return copySteps
     }
   },
   methods: {
+    doSetup () {
+      const { user, currentStepKey, stepContentSelect } = this
+      const info = {
+        user,
+        step: currentStepKey,
+        option: stepContentSelect
+      }
+      this.$router.push({ name: 'result', params: { info } })
+    },
     isStepActive (step) {
       return step === this.step
+    },
+    changeStep (number) {
+      this.step = this.step + number
+      this.resetSelection()
+    },
+    resetSelection () {
+      this.stepContentSelect = null
     }
   }
 }
@@ -153,7 +161,12 @@ export default {
   font-size: 24px;
 }
 
-.welcome__steps__text {
-  font-size: 14px;
+.welcome__steps {
+  max-width: 600px;
+}
+
+.welcome__steps__button {
+  color: white;
+  font-weight: 500;
 }
 </style>
